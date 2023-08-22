@@ -13,5 +13,13 @@ namespace SuperApp.Core.Extensions
                 value = value * -1;
             }
         }
+
+        public static void MustBePossitive(this int value, string parameterName)
+        {
+            if(value < 0)
+            {
+                throw new ArgumentOutOfRangeException(parameterName, "Value must be positive");
+            }
+        }
     }
 }

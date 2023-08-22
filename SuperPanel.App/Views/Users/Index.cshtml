@@ -42,7 +42,7 @@
                 {
                     <tr>
                         <td>@u.Id</td>
-                        <td>@u.FirstName @u.LastName</td>
+                        <td><a class="page-link" href="/users/details?userId=@u.Id" aria-label="Previous Page">@u.FirstName @u.LastName</a></td>
                         <td>@u.Email</td>
                         <td>@u.CreatedAt</td>
                     </tr>

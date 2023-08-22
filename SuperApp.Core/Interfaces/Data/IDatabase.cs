@@ -12,5 +12,6 @@ namespace SuperApp.Core.Interfaces.Data
         public IEnumerable<T> Get<T>(string sqlCommand, DbParameter[] parameters, CommandType commandType) where T : class;
         Task<IEnumerable<T>> GetAsync<T>(string sqlCommand, DbParameter[] parameters, CommandType commandType) where T : class;
         Task<T> GetScalarAsync<T>(string sqlCommand, DbParameter[] parameters, CommandType commandType);
+        Task<T> SingleAsync<T>(string sqlCommand, DbParameter[] parameters, CommandType commandType) where T : class;
     }
 }

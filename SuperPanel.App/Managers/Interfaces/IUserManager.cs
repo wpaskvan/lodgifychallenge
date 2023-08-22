@@ -7,5 +7,6 @@ namespace SuperPanel.App.Managers.Interfaces
     public interface IUserManager
     {
         Task<PaginationViewModel<UserViewModel>> GetUsersByPageAsync(int page, int pageSize);
+        Task<UserViewModel> GetUserByIdAsync(int userId);
     }
 }

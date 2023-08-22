@@ -11,5 +11,6 @@ namespace SuperApp.Core.Interfaces.Data
         Task<IEnumerable<UserDataModel>> QueryAllAsync();
         Task<IEnumerable<UserDataModel>> GetByPageAsync(int skip, int pageSize);
         Task<int> GetCountAsync();
+        Task<UserDataModel> GetByIdAsync(int userId);
     }
 }

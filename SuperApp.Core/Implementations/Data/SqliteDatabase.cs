@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Dynamic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -54,6 +55,24 @@ namespace SuperApp.Core.Implementations.Data
 
                 _logger.LogTrace("Method SqliteDatabase.GetAsync finished.");
                 return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred trying to access to database.");
+                throw;
+            }
+        }
+
+        public async Task<T> SingleAsync<T>(string sqlCommand, DbParameter[] parameters, CommandType commandType) where T : class
+        {
+            _logger.LogTrace("Method SqliteDatabase.GetAsync Started: Executing {command} on Database.", sqlCommand);
+            try
+            {
+                var queryParams = ConvertToDapperParameter(parameters);
+                var result = await _connection.QueryAsync<T>(sqlCommand, queryParams, commandType: commandType);
+
+                _logger.LogTrace("Method SqliteDatabase.GetAsync finished.");
+                return result.FirstOrDefault();
             }
             catch (Exception ex)
             {

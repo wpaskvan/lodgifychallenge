@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using SuperApp.Core.Interfaces.Data;
+using SuperApp.Core.Models;
 using SuperPanel.App.Managers.Interfaces;
 using SuperPanel.App.Models;
 using System;
@@ -36,6 +37,13 @@ namespace SuperPanel.App.Managers.Implementations
                 TotalPages = totalPages,
                 PageSize = pageSize
             };
+        }
+
+        public async Task<UserViewModel> GetUserByIdAsync(int userId)
+        {
+            var user = await _userRepository.GetByIdAsync(userId);
+
+            return _mapper.Map<UserViewModel>(user);
         }
     }
 }

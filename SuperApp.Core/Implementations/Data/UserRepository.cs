@@ -49,6 +49,24 @@ namespace SuperApp.Core.Implementations.Data
             return result;
         }
 
+        public async Task<UserDataModel> GetByIdAsync(int userId)
+        {
+            string command = "SELECT Id, Login, Email, FirstName, LastName, Phone " +
+                "FROM Users " +
+                "WHERE Id = @userId " +
+                "ORDER BY Id ASC";
+            userId.MustBePossitive("UserId");
+
+            DbParameter[] dbParams = new DbParameter[]
+            {
+                new SqliteParameter("@userId", userId)
+            };
+
+            var result = await _database.SingleAsync<UserDataModel>(command, dbParams, CommandType.Text);
+
+            return result;
+        }
+
         public async Task<int> GetCountAsync()
         {
             string command = "SELECT Count(Id) FROM Users";
