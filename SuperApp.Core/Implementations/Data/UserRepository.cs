@@ -67,6 +67,21 @@ namespace SuperApp.Core.Implementations.Data
             return result;
         }
 
+        public async Task<bool> DeleteAsync(int userId)
+        {
+            string command = "DELETE FROM Users WHERE Id = @userId";
+            userId.MustBePossitive("UserId");
+
+            DbParameter[] dbParams = new DbParameter[]
+            {
+                new SqliteParameter("@userId", userId)
+            };
+
+            var result = await _database.ExecuteAsync(command, dbParams, CommandType.Text);
+
+            return result > 0;
+        }
+
         public async Task<int> GetCountAsync()
         {
             string command = "SELECT Count(Id) FROM Users";

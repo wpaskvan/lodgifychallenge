@@ -42,7 +42,7 @@
                 {
                     <tr>
                         <td>@u.Id</td>
-                        <td><a class="page-link" href="/users/details?userId=@u.Id" aria-label="Previous Page">@u.FirstName @u.LastName</a></td>
+                        <td><a href="/users/details?userId=@u.Id" aria-label="Previous Page">@u.FirstName @u.LastName</a></td>
                         <td>@u.Email</td>
                         <td>@u.CreatedAt</td>
                     </tr>
@@ -81,7 +81,7 @@
                 }
 
                 <li class="page-item @(!hasMorePages ? "disabled" : string.Empty)">
-                    <a class="page-link" onclick="OnPageItemClick('/users',@nextPage)" aria-label="Next Page">
+                    <a class="nav-link" onclick="OnPageItemClick('/users',@nextPage)" aria-label="Next Page">
                         <span aria-hidden="true">&raquo;</span>
                         <span class="sr-only">Next Page</span>
                     </a>

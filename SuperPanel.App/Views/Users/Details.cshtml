@@ -21,8 +21,12 @@
                 <p class="card-text">
                     Created At: @Model.CreatedAt
                 </p>
-                <a href="/users/delete?id=@Model.Id" class="btn btn-primary">GDPR Delete</a>
+                <a href="/users/delete/@Model.Id" class="btn btn-primary">GDPR Delete</a>
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script src="~/js/users.js" asp-append-version="true"></script>
+}

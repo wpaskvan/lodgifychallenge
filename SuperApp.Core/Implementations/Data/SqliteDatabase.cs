@@ -99,6 +99,24 @@ namespace SuperApp.Core.Implementations.Data
             }
         }
 
+        public async Task<int> ExecuteAsync(string sqlCommand, DbParameter[] parameters, CommandType commandType)
+        {
+            _logger.LogTrace("Method SqliteDatabase.GetScalarAsync Started: Executing {command} on Database.", sqlCommand);
+            try
+            {
+                var queryParams = ConvertToDapperParameter(parameters);
+                var result = await _connection.ExecuteAsync(sqlCommand, queryParams, commandType: commandType);
+
+                _logger.LogTrace("Method SqliteDatabase.GetScalarAsync finished.");
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred trying to access to database.");
+                throw;
+            }
+        }
+
         #endregion
 
         #region Private Methods

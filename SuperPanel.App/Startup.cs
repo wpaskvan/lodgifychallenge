@@ -36,12 +36,26 @@ namespace SuperPanel.App
             services.AddOptions();
             services.Configure<DataOptions>(options => Configuration.GetSection("Data").Bind(options));
             services.Configure<DatabaseConfiguration>(options => Configuration.GetSection("Database").Bind(options));
+            services.Configure<ExternalApiConfiguration>(options => Configuration.GetSection("ExternalApi").Bind(options));
+
+            services.AddHttpClient();
 
             services.ConfigureAutomapper();
             services.ConfigureSuperAppCoreServices();
 
             // Data
             services.AddSingleton<IUserManager, UserManager>();
+
+            services.AddCors(options =>
+             {
+                 options.AddDefaultPolicy(
+                     builder =>
+                     {
+                         builder.AllowAnyOrigin()
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
+                     });
+             });
         }
 
 
@@ -59,6 +73,7 @@ namespace SuperPanel.App
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            app.UseCors();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 

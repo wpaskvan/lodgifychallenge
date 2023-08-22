@@ -8,5 +8,6 @@ namespace SuperPanel.App.Managers.Interfaces
     {
         Task<PaginationViewModel<UserViewModel>> GetUsersByPageAsync(int page, int pageSize);
         Task<UserViewModel> GetUserByIdAsync(int userId);
+        Task GdprDeleteAsync(int userId);
     }
 }

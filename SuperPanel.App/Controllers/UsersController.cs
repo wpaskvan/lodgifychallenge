@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SuperApp.Core.Exceptions;
 using SuperPanel.App.Managers.Interfaces;
 using SuperPanel.App.Models;
 using System;
@@ -65,6 +66,29 @@ namespace SuperPanel.App.Controllers
             finally
             {
                 _logger.LogTrace("Action Users:Details finished");
+            }
+        }
+
+        [Route("{controller}/delete/{userId}")]
+        public async Task<IActionResult> Delete([FromRoute] int userId)
+        {
+            _logger.LogTrace("Action Users:Delete started");
+            try
+            {
+                await _userManager.GdprDeleteAsync(userId);
+                return View();
+            }catch(NotFoundException ex)
+            {
+                _logger.LogError(ex, "An error occurred processing the request: Resource not found {resourceId}", ex.ResourceId);
+                return NotFound();
+            }catch(ExternalApiException ex)
+            { 
+                _logger.LogError(ex, "An error occurred processing the request: External API responds with {statusCode} {response}", ex.StatusCode, ex.ResponseMessage);
+                return StatusCode(ex.StatusCode);
+            }
+            finally
+            {
+                _logger.LogTrace("Action Users:Delete finished");
             }
         }
     }
