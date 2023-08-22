@@ -79,8 +79,8 @@ namespace SuperPanel.App
             Randomizer.Seed = new Random(8675309);
 
             var userIds = 10000;
-            var faker = new Faker<UserViewModel>()
-                .CustomInstantiator(f => new UserViewModel(userIds++))
+            var faker = new Faker<UserDataModel>()
+                .CustomInstantiator(f => new UserDataModel(userIds++))
                 .RuleFor(u => u.Login, (f, u) => f.Internet.UserName())
                 .RuleFor(u => u.FirstName, (f, u) => f.Name.FirstName())
                 .RuleFor(u => u.LastName, (f, u) => f.Name.LastName())
