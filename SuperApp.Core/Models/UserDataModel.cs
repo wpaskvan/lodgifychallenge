@@ -1,25 +1,22 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
-namespace SuperPanel.App.Models
+namespace SuperApp.Core.Models
 {
-    public class User
+    public class UserDataModel : BaseDataModel
     {
-        public int Id { get; set; }
-
         public string Login { get; set; }
         public string Email { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Phone { get; set; }
-
         public DateTime CreatedAt { get; set; }
 
-        public User() { }
+        public UserDataModel() : base() { }
 
-        public User(int id)
+        public UserDataModel(int id) : base(id)
         {
-            this.Id = id;
         }
     }
-
 }

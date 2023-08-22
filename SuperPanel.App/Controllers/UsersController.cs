@@ -1,26 +1,30 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SuperPanel.App.Data;
+using SuperPanel.App.Managers.Interfaces;
+using SuperPanel.App.Models;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SuperPanel.App.Controllers
 {
     public class UsersController : Controller
     {
         private readonly ILogger<UsersController> _logger;
-        private readonly IUserRepository _userRepository;
+        private readonly IUserManager _userManager;
 
-        public UsersController(ILogger<UsersController> logger, IUserRepository userRepository)
+        public UsersController(ILogger<UsersController> logger, IUserManager userManager)
         {
             _logger = logger;
-            _userRepository = userRepository;
+            _userManager = userManager;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index(int page = 1, int pageSize = 25)
         {
-            var users = _userRepository.QueryAll();
-            return View(users);
+            _logger.LogTrace("Action Users:Index started");
+            var result = await _userManager.GetUsersByPageAsync(page, pageSize);
+
+            _logger.LogTrace("Action Users:Index finished");
+            return View(result);
         }
-
-
     }
 }
