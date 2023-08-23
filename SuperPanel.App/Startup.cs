@@ -4,8 +4,12 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using SuperPanel.App.Data;
+using SuperApp.Core.Extensions;
+using SuperApp.Core.Models;
+using SuperPanel.App.Extensions;
 using SuperPanel.App.Infrastructure;
+using SuperPanel.App.Managers.Implementations;
+using SuperPanel.App.Managers.Interfaces;
 using SuperPanel.App.Models;
 using System;
 using System.Linq;
@@ -31,9 +35,27 @@ namespace SuperPanel.App
             services.AddControllersWithViews();
             services.AddOptions();
             services.Configure<DataOptions>(options => Configuration.GetSection("Data").Bind(options));
+            services.Configure<DatabaseConfiguration>(options => Configuration.GetSection("Database").Bind(options));
+            services.Configure<ExternalApiConfiguration>(options => Configuration.GetSection("ExternalApi").Bind(options));
+
+            services.AddHttpClient();
+
+            services.ConfigureAutomapper();
+            services.ConfigureSuperAppCoreServices();
 
             // Data
-            services.AddSingleton<IUserRepository, UserRepository>();
+            services.AddSingleton<IUserManager, UserManager>();
+
+            services.AddCors(options =>
+             {
+                 options.AddDefaultPolicy(
+                     builder =>
+                     {
+                         builder.AllowAnyOrigin()
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
+                     });
+             });
         }
 
 
@@ -46,10 +68,12 @@ namespace SuperPanel.App
             }
             else
             {
+                app.UseStatusCodePagesWithRedirects("/Errors/{0}");
                 app.UseExceptionHandler("/Users/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            app.UseCors();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
@@ -71,8 +95,8 @@ namespace SuperPanel.App
             Randomizer.Seed = new Random(8675309);
 
             var userIds = 10000;
-            var faker = new Faker<User>()
-                .CustomInstantiator(f => new User(userIds++))
+            var faker = new Faker<UserDataModel>()
+                .CustomInstantiator(f => new UserDataModel(userIds++))
                 .RuleFor(u => u.Login, (f, u) => f.Internet.UserName())
                 .RuleFor(u => u.FirstName, (f, u) => f.Name.FirstName())
                 .RuleFor(u => u.LastName, (f, u) => f.Name.LastName())
