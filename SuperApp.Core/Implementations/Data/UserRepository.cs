@@ -35,8 +35,6 @@ namespace SuperApp.Core.Implementations.Data
                 "FROM Users " +
                 "ORDER BY Id ASC " +
                 "LIMIT @take OFFSET @skip";
-            skip.EnsureNonNegative();
-            pageSize.EnsureNonNegative();
 
             DbParameter[] dbParams = new DbParameter[]
             {
@@ -55,7 +53,6 @@ namespace SuperApp.Core.Implementations.Data
                 "FROM Users " +
                 "WHERE Id = @userId " +
                 "ORDER BY Id ASC";
-            userId.MustBePossitive("UserId");
 
             DbParameter[] dbParams = new DbParameter[]
             {
@@ -70,7 +67,6 @@ namespace SuperApp.Core.Implementations.Data
         public async Task<bool> DeleteAsync(int userId)
         {
             string command = "DELETE FROM Users WHERE Id = @userId";
-            userId.MustBePossitive("UserId");
 
             DbParameter[] dbParams = new DbParameter[]
             {

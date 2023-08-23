@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SuperApp.Core.Constants;
 using SuperApp.Core.Exceptions;
+using SuperApp.Core.Extensions;
 using SuperApp.Core.Interfaces.Data;
 using SuperApp.Core.Models;
 using SuperPanel.App.Managers.Interfaces;
@@ -38,9 +39,13 @@ namespace SuperPanel.App.Managers.Implementations
         public async Task<PaginationViewModel<UserViewModel>> GetUsersByPageAsync(int page, int pageSize)
         {
             _logger.LogTrace("Method UserManager:GetUsersByPageAsync started");
-            int skip = pageSize * (page - 1);
+            page.MustBePossitive("Page");
+            pageSize.MustBePossitive("PageSize");
+
             var count = await _userRepository.GetCountAsync();
             var totalPages = (int)Math.Ceiling((decimal)count / (decimal)pageSize);
+
+            int skip = pageSize * (page <= totalPages ? page - 1 : 1);
             var users = await _userRepository.GetByPageAsync(skip, pageSize);
 
             var viewModels = _mapper.Map<IEnumerable<UserViewModel>>(users);
@@ -59,6 +64,8 @@ namespace SuperPanel.App.Managers.Implementations
         public async Task<UserViewModel> GetUserByIdAsync(int userId)
         {
             _logger.LogTrace("Method UserManager:GetUserByIdAsync started");
+            userId.MustBePossitive("UserId");
+
             var user = await _userRepository.GetByIdAsync(userId);
 
             _logger.LogTrace("Method UserManager:GetUserByIdAsync finished");
@@ -68,6 +75,8 @@ namespace SuperPanel.App.Managers.Implementations
         public async Task GdprDeleteAsync(int userId)
         {
             _logger.LogTrace("Method UserManager:GdprDeleteAsync started");
+            userId.MustBePossitive("UserId");
+
             var user = await _userRepository.GetByIdAsync(userId);
             if(user == null)
             {
@@ -86,7 +95,7 @@ namespace SuperPanel.App.Managers.Implementations
                     _logger.LogTrace($"Method UserManager:GdprDeleteAsync: API Result: {result.StatusCode}");
                     if (result.IsSuccessStatusCode)
                     {
-                        await _userRepository.DeleteAsync(userId);
+                        _ = await _userRepository.DeleteAsync(userId);
                     }
                     else
                     {
